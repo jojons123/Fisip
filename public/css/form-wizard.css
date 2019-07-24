@@ -1,0 +1,87 @@
+#regForm {
+    background-color: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: inherit;
+    padding: 40px;
+    width: 70%;
+    min-width: 300px;
+}
+
+h1 {
+    text-align: center;
+}
+
+input {
+    padding: 10px;
+    width: 100%;
+    font-size: 17px;
+    font-family: inherit;
+    border: 1px solid #aaaaaa;
+}
+
+/* Mark input boxes that gets an error on validation: */
+input.invalid {
+    background-color: #ffdddd;
+}
+
+/* Hide all steps by default: */
+.tab {
+    display: none;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+}
+
+.step.active {
+    opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+    background-color: #ff663b;
+}
+
+.wizard-btn-area{
+    overflow:auto;
+    margin-top: 20px;
+}
+
+.wizard-btn{
+    float:right;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+.multiple-val{
+    margin-top: 20px;
+    border: #d9d5cc 2px solid;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.multiple-val .mt-10{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
