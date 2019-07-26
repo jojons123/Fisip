@@ -19,5 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/form', function(){
-    return view('form');
+    $sections = \App\Section::with('questions')->get();
+    return view('form', compact('sections'));
 });
+
+Route::view('/test', 'test');
