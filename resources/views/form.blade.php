@@ -20,8 +20,9 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container">
-                        <form id="regForm" action="/">
-                            <!-- One "tab" for each step in the form: -->
+                        <form id="regForm" action="/form" method="post">
+                        @csrf
+                        <!-- One "tab" for each step in the form: -->
                             @foreach($sections as $section)
                                 @if($section->visible == 0)
                                     @continue
@@ -85,6 +86,16 @@
                                                    value="2 Tahun (Magister Ilmu Administrasi)">
                                         </div>
 
+                                        <div class="mt-10">
+                                            Tahun Masuk :
+                                            <input type="number" name="tahun_masuk" required class="single-input">
+                                        </div>
+
+                                        <div class="mt-10">
+                                            Jenjang Studi :
+                                            <input type="text" name="jenjang_studi" required class="single-input">
+                                        </div>
+
                                     @endif
 
                                     @foreach($section->questions as $question)
@@ -128,7 +139,8 @@
                                                        placeholder="">
 
                                             @elseif($question->type == "number")
-                                                <input type="number" name="nim" min="0" required class="single-input" placeholder="{{ $question->placeholder }}">
+                                                <input type="number" name="{{ $question->slug }}" min="0" required
+                                                       class="single-input" placeholder="{{ $question->placeholder }}">
 
                                             @elseif($question->type == "multitext")
                                                 <div class="multiple-val" id="{{ $question->id }}">
@@ -150,6 +162,31 @@
                                                           name="{{ $question->slug }}"
                                                           onfocus="if (!window.__cfRLUnblockHandlers) return false; this.placeholder = ''"
                                                           onblur="if (!window.__cfRLUnblockHandlers) return false; this.placeholder = '{{ $question->placeholder }}'"></textarea>
+
+                                            @elseif($question->type == "scale")
+                                                <br>
+                                                <br>
+                                                <div class="col-md-12 cust-rad">
+                                                    <ul>
+                                                        <li><input type="radio" name="{{ $question->slug }}" value="1"
+                                                                   id="radio-{{ $question->id}}-1"><label
+                                                                    for="radio-{{ $question->id}}-1">1</label></li>
+                                                        <li><input type="radio" name="{{ $question->slug }}" value="2"
+                                                                   id="radio-{{ $question->id}}-2"><label
+                                                                    for="radio-{{ $question->id}}-2">2</label></li>
+                                                        <li><input type="radio" name="{{ $question->slug }}" value="3"
+                                                                   id="radio-{{ $question->id}}-3"><label
+                                                                    for="radio-{{ $question->id}}-3">3</label></li>
+                                                        <li><input type="radio" name="{{ $question->slug }}" value="4"
+                                                                   id="radio-{{ $question->id}}-4"><label
+                                                                    for="radio-{{ $question->id}}-4">4</label></li>
+                                                        <li><input type="radio" name="{{ $question->slug }}" value="5"
+                                                                   id="radio-{{ $question->id}}-5"><label
+                                                                    for="radio-{{ $question->id}}-5">5</label></li>
+                                                    </ul>
+                                                </div>
+                                                <br>
+                                                <br>
                                             @endif
                                         </div>
                                     @endforeach
@@ -236,9 +273,10 @@
             });
         }
 
-        showHideRadioButton(26, 4);
+        // showHideRadioButton(26, 4);
         showHideRadioButton(26, 3);
         showHideRadioButton(3, 29);
+        showHideRadioButton(3, 4);
         showHideRadioButton(16, 17);
         showHideRadioButton(17, 44);
         showHideRadioButton(44, 18);

@@ -23,4 +23,7 @@ Route::get('/form', function(){
     return view('form', compact('sections'));
 });
 
+Route::get('/form', 'FormController@index');
+Route::post('/form', 'FormController@store');
+
 Route::view('/test', 'test');

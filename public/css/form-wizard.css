@@ -55,13 +55,13 @@ button:hover {
     background-color: #ff663b;
 }
 
-.wizard-btn-area{
-    overflow:auto;
+.wizard-btn-area {
+    overflow: auto;
     margin-top: 20px;
 }
 
-.wizard-btn{
-    float:right;
+.wizard-btn {
+    float: right;
 }
 
 input::-webkit-outer-spin-button,
@@ -72,20 +72,34 @@ input::-webkit-inner-spin-button {
 }
 
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+    -moz-appearance: textfield; /* Firefox */
 }
-.multiple-val{
+
+.multiple-val {
     margin-top: 20px;
     border: #d9d5cc 2px solid;
     border-radius: 20px;
     padding: 10px;
 }
 
-.multiple-val .mt-10{
+.multiple-val .mt-10 {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.clickable{
+.clickable {
     cursor: pointer;
+}
+
+
+.cust-rad li {
+    float: left;
+}
+
+.cust-rad li input[type="radio"] {
+    width: 40px;
+    color: #666666;
+    border: 1px solid #dddddd;
+    border-radius: 100%;
+    background: white;
 }
