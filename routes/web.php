@@ -18,12 +18,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/form', function(){
-    $sections = \App\Section::with('questions')->get();
-    return view('form', compact('sections'));
-});
 
 Route::get('/form', 'FormController@index');
 Route::post('/form', 'FormController@store');
 
-Route::get('/test', 'FormController@testing');
+Route::get('/admin', 'AdminController@index');
+Route::get('/admin/mahasiswa/{id}', 'AdminController@detailMahasiswa');
+
+Route::get('/ajax/mahasiswa', 'AdminController@getDataMahasiswa');

@@ -22,7 +22,14 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
-//        return $temp = $this->removeUsedParams($request);
+        $this->validate($request, [
+            'nama' => 'required|text',
+            'nim' => 'required|number',
+            'dosen_pembimbing_utama' => 'required',
+            'tahun_masuk' => 'required|number',
+            'jenjang_studi' => 'required|text|min:1|max:5'
+        ]);
+
         $mahasiswa = Mahasiswa::create($request->all());
         foreach ($request->dosen_pembimbing_anggota as $dosen) {
             DosenPembimbing::create([
@@ -52,7 +59,7 @@ class FormController extends Controller
 
     public function getForm($id)
     {
-        $data = Mahasiswa::with('answers', 'dosenPembimbings', 'mataKuliahs')->findOrFail($id);
+        $data = Mahasiswa::with('answers.question', 'dosenPembimbings', 'mataKuliahs')->findOrFail($id);
         try {
             $templateProcessor = new TemplateProcessor('Template Laporan.docx');
             $templateProcessor->setValue('nama', $data->nama);
@@ -61,7 +68,26 @@ class FormController extends Controller
             $templateProcessor->setValue('tahun_masuk', $data->tahun_masuk);
             $templateProcessor->setValue('jenjang_studi', $data->jenjang_studi);
 
-            $export_file = public_path('filename.docx');
+            $templateProcessor->setValue('dpa_1', $data->dosenPembimbings[0]->nama);
+            $templateProcessor->setValue('dpa_2', $data->dosenPembimbings[1]->nama);
+            $templateProcessor->setValue('dpa_3', $data->dosenPembimbings[2]->nama);
+
+            foreach ($data->answers as $answer) {
+                if ($answer->question->type == "radio") {
+                    $val = is_null($answer->answer) ? ' - ' : $answer->answer == '1' ? 'Ya' : 'Tidak';
+                    $templateProcessor->setValue($answer->question->slug, $val);
+                } elseif ($answer->question->type == "multitext") {
+                    $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
+                    foreach ($mk as $i => $matkul){
+                        $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
+                        $templateProcessor->setValue('mata_kuliah_belum_' . $i, $val);
+                    }
+                } else {
+                    $templateProcessor->setValue($answer->question->slug, is_null($answer->answer) ? '' : $answer->answer);
+                }
+            }
+
+            $export_file = public_path("Formulir Pengajuan Pascasarjana $data->nim.docx");
 
             $templateProcessor->saveAs($export_file);
             return response()->download($export_file)->deleteFileAfterSend(true);
@@ -123,7 +149,7 @@ class FormController extends Controller
                 }
             }
 
-            $export_file = public_path('filename.docx');
+            $export_file = public_path("Formulir Pengajuan Pascasarjana $data->nim.docx");
 
             $templateProcessor->saveAs($export_file);
             return response()->download($export_file)->deleteFileAfterSend(true);

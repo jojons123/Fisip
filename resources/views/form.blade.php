@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container">
-                        <form id="regForm" action="/form" method="post">
+                        <form id="regForm" action="/form" method="post" onsubmit="submitValidation()">
                         @csrf
                         <!-- One "tab" for each step in the form: -->
                             @foreach($sections as $section)
@@ -250,9 +250,6 @@
                     } else {
                         $('#input-q-' + destination).hide();
                     }
-                    // if ($('#radio-' + question + '-2').is(':checked')) {
-                    //     $('#radio-q-' + destination).hide();
-                    // }
                 })) ;
             });
         }
@@ -266,14 +263,10 @@
                     } else {
                         $('#input-q-' + destination).hide();
                     }
-                    // if ($('#radio-' + question + '-2').is(':checked')) {
-                    //     $('#radio-q-' + destination).hide();
-                    // }
                 })) ;
             });
         }
 
-        // showHideRadioButton(26, 4);
         showHideRadioButton(26, 3);
         showHideRadioButton(3, 29);
         showHideRadioButton(3, 4);
@@ -284,16 +277,11 @@
         showHideRadioButton(21, 22);
         showHideRadioButtonFalse(14, 15);
         showHideRadioButtonFalse(44, 20);
-        // showHideRadioButton(3, 6);
 
-        // $('#radio-q-1 input:radio').each(function () {
-        //     if ($(this).on('change', function () {
-        //         if ($('#radio-1-1').is(':checked')) {
-        //             $('#radio-q-2').show();
-        //         } else {
-        //             $('#radio-q-2').hide();
-        //         }
-        //     })) ;
-        // });
+        function submitValidation(){
+            $('#regForm').find('div:hidden').each(function(){
+                $(this).find('input').prop('checked', false);
+            });
+        }
     </script>
 @endsection
