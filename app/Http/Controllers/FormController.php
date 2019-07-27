@@ -23,11 +23,11 @@ class FormController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'nama' => 'required|text',
-            'nim' => 'required|number',
+            'nama' => 'required',
+            'nim' => 'required|numeric',
             'dosen_pembimbing_utama' => 'required',
-            'tahun_masuk' => 'required|number',
-            'jenjang_studi' => 'required|text|min:1|max:5'
+            'tahun_masuk' => 'required|numeric',
+            'jenjang_studi' => 'required|min:1|max:5'
         ]);
 
         $mahasiswa = Mahasiswa::create($request->all());
