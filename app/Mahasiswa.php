@@ -52,4 +52,10 @@ class Mahasiswa extends Model
     {
         return $this->hasMany('App\MataKuliah', 'id_mahasiswa');
     }
+
+    public function getAnswers(){
+        return Question::with('answers')->whereHas('answers', function($q){
+            $q->where('id_mahasiswa', 12);
+        })->get();
+    }
 }

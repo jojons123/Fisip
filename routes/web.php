@@ -26,4 +26,4 @@ Route::get('/form', function(){
 Route::get('/form', 'FormController@index');
 Route::post('/form', 'FormController@store');
 
-Route::view('/test', 'test');
+Route::get('/test', 'FormController@testing');

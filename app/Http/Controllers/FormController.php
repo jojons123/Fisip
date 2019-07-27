@@ -8,6 +8,8 @@ use App\Mahasiswa;
 use App\MataKuliah;
 use App\Question;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\Exception\CopyFileException;
+use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class FormController extends Controller
@@ -20,6 +22,7 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
+//        return $temp = $this->removeUsedParams($request);
         $mahasiswa = Mahasiswa::create($request->all());
         foreach ($request->dosen_pembimbing_anggota as $dosen) {
             DosenPembimbing::create([
@@ -36,7 +39,7 @@ class FormController extends Controller
         }
 
         $temp = $this->removeUsedParams($request);
-        foreach ($temp->request as $index => $var){
+        foreach ($temp->request as $index => $var) {
             Answer::create([
                 'id_question' => Question::where('slug', $index)->first()->id,
                 'id_mahasiswa' => $mahasiswa->id,
@@ -45,10 +48,10 @@ class FormController extends Controller
         }
 
         return $this->getForm($mahasiswa->id);
-        return "NOH";
     }
 
-    public function getForm($id){
+    public function getForm($id)
+    {
         $data = Mahasiswa::with('answers', 'dosenPembimbings', 'mataKuliahs')->findOrFail($id);
         try {
             $templateProcessor = new TemplateProcessor('Template Laporan.docx');
@@ -63,9 +66,7 @@ class FormController extends Controller
             $templateProcessor->saveAs($export_file);
             return response()->download($export_file)->deleteFileAfterSend(true);
         } catch (CopyFileException $e) {
-            return $e;
         } catch (CreateTemporaryFileException $e) {
-            return $e;
         }
     }
 
@@ -80,7 +81,56 @@ class FormController extends Controller
         $request->request->remove('jenjang_studi');
         $request->request->remove('mata_kuliah_belum_lulus');
 
+        $questions = Question::select(['id', 'slug'])->get();
+        foreach ($questions as $question) {
+            if (!$request->has($question->slug)) {
+                $request->request->set($question->slug, null);
+            }
+        }
+
 
         return $request;
+    }
+
+    public function testing()
+    {
+        $id = 13;
+        $data = Mahasiswa::with('answers.question', 'dosenPembimbings', 'mataKuliahs')->findOrFail($id);
+        try {
+            $templateProcessor = new TemplateProcessor('Template Laporan.docx');
+            $templateProcessor->setValue('nama', $data->nama);
+            $templateProcessor->setValue('nim', $data->nim);
+            $templateProcessor->setValue('dosen_pembimbing_utama', $data->dosen_pembimbing_utama);
+            $templateProcessor->setValue('tahun_masuk', $data->tahun_masuk);
+            $templateProcessor->setValue('jenjang_studi', $data->jenjang_studi);
+
+            $templateProcessor->setValue('dpa_1', $data->dosenPembimbings[0]->nama);
+            $templateProcessor->setValue('dpa_2', $data->dosenPembimbings[1]->nama);
+            $templateProcessor->setValue('dpa_3', $data->dosenPembimbings[2]->nama);
+
+            foreach ($data->answers as $answer) {
+                if ($answer->question->type == "radio") {
+                    $val = is_null($answer->answer) ? ' - ' : $answer->answer == '1' ? 'Ya' : 'Tidak';
+                    $templateProcessor->setValue($answer->question->slug, $val);
+                } elseif ($answer->question->type == "multitext") {
+                    $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
+                    foreach ($mk as $i => $matkul){
+                        $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
+                        $templateProcessor->setValue('mata_kuliah_belum_' . $i, $val);
+                    }
+                } else {
+                    $templateProcessor->setValue($answer->question->slug, is_null($answer->answer) ? '' : $answer->answer);
+                }
+            }
+
+            $export_file = public_path('filename.docx');
+
+            $templateProcessor->saveAs($export_file);
+            return response()->download($export_file)->deleteFileAfterSend(true);
+        } catch (CopyFileException $e) {
+        } catch (CreateTemporaryFileException $e) {
+        }
+
+        return $data;
     }
 }
