@@ -23,6 +23,7 @@ class AdminController extends Controller
 
     public function detailMahasiswa($id){
         return $this->printForm($id);
+//        return redirect('/');
     }
 
     public function getDataMahasiswa(){
