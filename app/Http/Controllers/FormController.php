@@ -80,7 +80,7 @@ class FormController extends Controller
                     $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
                     foreach ($mk as $i => $matkul){
                         $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
-                        $templateProcessor->setValue('mata_kuliah_belum_' . $i, $val);
+                        $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
                     }
                 } else {
                     $templateProcessor->setValue($answer->question->slug, is_null($answer->answer) ? '' : $answer->answer);
@@ -142,7 +142,7 @@ class FormController extends Controller
                     $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
                     foreach ($mk as $i => $matkul){
                         $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
-                        $templateProcessor->setValue('mata_kuliah_belum_' . $i, $val);
+                        $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
                     }
                 } else {
                     $templateProcessor->setValue($answer->question->slug, is_null($answer->answer) ? '' : $answer->answer);
