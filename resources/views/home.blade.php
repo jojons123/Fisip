@@ -16,8 +16,8 @@
                                Fakultas Ilmu Sosial dan Ilmu Politik Universitas Jember
                               sebagaimana untuk bersama-sama membangun serta meningkatkan kualitas pendidikan
                               Pascasarjana Magister Ilmu Administrasi Fakultas Ilmu Sosial dan Ilmu Politik Universitas Jember wajib melakukan pengisian Borang.........</p>
-                            <a href="#" class="btn_1">Form</a>
-                            <a href="#" class="btn_2">Read More</a>
+                            <a href="form" class="btn_1">Form</a>
+                            <a href="" class="btn_2">Read More</a>
                         </div>
                     </div>
                 </div>
