@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/form', 'FormController@index');
 Route::post('/form', 'FormController@store');
+Route::view('/contact', 'contact');
 
 Route::view('/about', 'about');
 
