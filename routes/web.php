@@ -22,6 +22,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/form', 'FormController@index');
 Route::post('/form', 'FormController@store');
 
+Route::view('/about', 'about');
+
 Route::get('/upload', 'FormController@getUploadPage');
 Route::post('/upload', 'FormController@storeUpload');
 
