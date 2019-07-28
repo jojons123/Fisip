@@ -23,6 +23,8 @@ Route::get('/form', 'FormController@index');
 Route::post('/form', 'FormController@store');
 Route::view('/contact', 'contact');
 
+Route::view('/about', 'about');
+
 Route::get('/upload', 'FormController@getUploadPage');
 Route::post('/upload', 'FormController@storeUpload');
 

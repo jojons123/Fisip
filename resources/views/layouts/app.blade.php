@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@yield('title')</title>
-    <link rel="icon" href="{{ asset('img/favicon.png') }}">
+    <link rel="icon" href="https://unej.ac.id/wp-content/uploads/2017/10/cropped-Logo-Unej-Bakucompress-32x32.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <!-- animate CSS -->

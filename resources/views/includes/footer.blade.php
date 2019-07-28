@@ -1,5 +1,5 @@
 <footer class="footer-area">
-    {{--<div class="container">--}}
+    <div class="container">
         {{--<div class="row justify-content-between">--}}
             {{--<div class="col-sm-6 col-md-4 col-xl-3">--}}
                 {{--<div class="single-footer-widget footer_1">--}}
