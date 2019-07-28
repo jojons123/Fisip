@@ -9,14 +9,15 @@
                 <div class="col-lg-6 col-xl-6">
                     <div class="banner_text">
                         <div class="banner_text_iner">
-                            <h5>Every child yearns to learn</h5>
-                            <h1>Making Your Childs
-                                World Better</h1>
-                            <p>Replenish seasons may male hath fruit beast were seas saw you arrie said man beast whales
-                                his void unto last session for bite. Set have great you'll male grass yielding yielding
-                                man</p>
-                            <a href="#" class="btn_1">View Course </a>
-                            <a href="#" class="btn_2">Get Started </a>
+                            <h5></h5>
+                            <h1>Pascasarjana Fisip
+                              Magister Ilmu Administrasi</h1>
+                            <p>Kepada seluruh mahasiswa dan dosen Pascasarjana Magister Ilmu Administrasi
+                               Fakultas Ilmu Sosial dan Ilmu Politik Universitas Jember
+                              sebagaimana untuk bersama-sama membangun serta meningkatkan kualitas pendidikan
+                              Pascasarjana Magister Ilmu Administrasi Fakultas Ilmu Sosial dan Ilmu Politik Universitas Jember wajib melakukan pengisian Borang.........</p>
+                            <a href="#" class="btn_1">Form</a>
+                            <a href="#" class="btn_2">Read More</a>
                         </div>
                     </div>
                 </div>

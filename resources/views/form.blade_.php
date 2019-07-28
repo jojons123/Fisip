@@ -13,7 +13,7 @@
                 <div class="col-xl-5">
                     <div class="section_tittle text-center">
                         <p>Form</p>
-                        <h2>Kesejahteraan Sosial</h2>
+                        <h2>Kemajuan Studi</h2>
                     </div>
                 </div>
             </div>
