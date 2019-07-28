@@ -177,6 +177,7 @@ return [
 
         Krlove\EloquentModelGenerator\Provider\GeneratorServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Yoeunes\Toastr\ToastrServiceProvider::class
 
     ],
 
