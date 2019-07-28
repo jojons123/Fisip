@@ -22,6 +22,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/form') }}">Form</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/upload') }}">Upload</a>
+                            </li>
                         </ul>
                     </div>
                 </nav>

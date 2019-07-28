@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Mahasiswa;
 use App\MataKuliah;
+use App\Upload;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -17,19 +19,22 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(){
+    public function index()
+    {
         return view('admin.dashboard');
     }
 
-    public function detailMahasiswa($id){
+    public function detailMahasiswa($id)
+    {
         return $this->printForm($id);
 //        return redirect('/');
     }
 
-    public function getDataMahasiswa(){
+    public function getDataMahasiswa()
+    {
         $data = Mahasiswa::get();
-        foreach ($data as $i => $d){
-            $d->no = $i+1;
+        foreach ($data as $i => $d) {
+            $d->no = $i + 1;
         }
         return DataTables::of($data)
             ->make(true);
@@ -59,9 +64,9 @@ class AdminController extends Controller
                     $templateProcessor->setValue($answer->question->slug, $val);
                 } elseif ($answer->question->type == "multitext") {
                     $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
-                    foreach ($mk as $i => $matkul){
+                    foreach ($mk as $i => $matkul) {
                         $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
-                        $templateProcessor->setValue('mata_kuliah_belum_' . ($i+1), $val);
+                        $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
                     }
                 } else {
                     $templateProcessor->setValue($answer->question->slug, is_null($answer->answer) ? '' : $answer->answer);
@@ -76,4 +81,35 @@ class AdminController extends Controller
         } catch (CreateTemporaryFileException $e) {
         }
     }
+
+    public function getUploadPage()
+    {
+        return view('admin.upload');
+    }
+
+    public function getDataUpload()
+    {
+        $data = Upload::with('mahasiswa')->get();
+        foreach ($data as $i => $d) {
+            $d->no = $i + 1;
+        }
+        return DataTables::of($data)
+            ->addColumn('action', function ($q) {
+                return '<button class="btn btn-primary" type="button" onclick="downloadFile(\'' . $q->id . '\')">Download</button> <button class="btn btn-danger" onclick="deleteFile(\'' . $q->id . '\')" type="button">Delete</button>';
+            })->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function downloadUploadFile($id)
+    {
+        $file = Upload::with('mahasiswa')->findOrFail($id);
+        return response()->download(storage_path('app/' . $file->file_path), "Formulir fix " . $file->mahasiswa->nim . ".pdf");
+    }
+
+    public function deleteUploadFile(Request $request)
+    {
+        Upload::findOrFail($request->id)->delete();
+        return redirect()->back();
+    }
 }
+

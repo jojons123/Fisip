@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{{ asset('css/slick.css') }}">
     <!-- style CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @toastr_css
+    {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">--}}
     @yield('css')
 </head>
 
@@ -61,6 +63,20 @@
 <script src="{{ asset('js/waypoints.min.js') }}"></script>
 <!-- custom js -->
 <script src="{{ asset('js/custom.js') }}"></script>
+@toastr_js
+@toastr_render
+<script>
+    toastr.options = {
+        "preventDuplicates": true
+    }
+    @if(count($errors) > 0)
+    @foreach($errors->all() as $error)
+    toastr.error("{{ $error }}");
+    @endforeach
+    @endif
+</script>
+
+{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>--}}
 @yield('js')
 </body>
 

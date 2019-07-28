@@ -7,6 +7,7 @@ use App\DosenPembimbing;
 use App\Mahasiswa;
 use App\MataKuliah;
 use App\Question;
+use App\Upload;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
@@ -158,5 +159,42 @@ class FormController extends Controller
         }
 
         return $data;
+    }
+
+    public function getUploadPage(){
+        return view('upload');
+    }
+
+    public function storeUpload(Request $request){
+        $this->validate($request, [
+            'nim' => 'required|numeric',
+            'nama' => 'required',
+            'file' => 'required|file|mimes:pdf'
+        ]);
+
+        $mahasiswa = Mahasiswa::where('nim', $request->nim)->where('nama', $request->nama)->first();
+
+        if(is_null($mahasiswa)){
+            toastr()->error('error', 'NIM atau Nama tidak tersedia');
+            return redirect()->back();
+        }
+
+        $file = $request->file('file');
+        $path = $file->store('public/files');
+
+        $temp_upload = Upload::where('id_mahasiswa', $mahasiswa->id)->get();
+        if(count($temp_upload) > 0){
+            toastr()->error('Anda sudah mengupload file');
+            return redirect()->back();
+        }
+
+        Upload::create([
+            'id' => uniqid(),
+            'id_mahasiswa' => $mahasiswa->id,
+            'file_path' => $path
+        ]);
+
+        toastr()->success('File berhasil diupload');
+        return redirect()->back();
     }
 }
