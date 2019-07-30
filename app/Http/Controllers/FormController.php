@@ -57,11 +57,15 @@ class FormController extends Controller
 
         $temp = $this->removeUsedParams($request);
         foreach ($temp->request as $index => $var) {
-            Answer::create([
-                'id_question' => Question::where('slug', $index)->first()->id,
-                'id_mahasiswa' => $mahasiswa->id,
-                'answer' => $var
-            ]);
+            try{
+                Answer::create([
+                    'id_question' => Question::where('slug', $index)->first()->id,
+                    'id_mahasiswa' => $mahasiswa->id,
+                    'answer' => $var
+                ]);
+            } catch (\Exception $e){
+                dd($index);
+            }
         }
 
         return $this->getForm($mahasiswa->id);
@@ -119,9 +123,10 @@ class FormController extends Controller
         $request->request->remove('nim');
         $request->request->remove('dosen_pembimbing_utama');
         $request->request->remove('dosen_pembimbing_anggota');
+        $request->request->remove('dosen_pembimbing_akademik');
         $request->request->remove('tahun_masuk');
         $request->request->remove('jenjang_studi');
-        $request->request->remove('mata_kuliah_belum_lulus');
+        $request->request->remove('mata_kuliah_belum');
 
         $questions = Question::select(['id', 'slug'])->get();
         foreach ($questions as $question) {
