@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -177,8 +177,8 @@ return [
 
         Krlove\EloquentModelGenerator\Provider\GeneratorServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        Yoeunes\Toastr\ToastrServiceProvider::class
-
+        Yoeunes\Toastr\ToastrServiceProvider::class,
+        App\Providers\GoogleDriveServiceProvider::class,
     ],
 
     /*

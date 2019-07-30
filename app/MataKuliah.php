@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property int $id_mahasiswa
- * @property string $mata_kuliah
+ * @property int $id_mata_kuliah
  * @property Mahasiswa $mahasiswa
+ * @property BaseMataKuliah $baseMataKuliah
  */
 class MataKuliah extends Model
 {
-    public $timestamps = false;
     /**
      * The table associated with the model.
      * 
@@ -23,7 +23,7 @@ class MataKuliah extends Model
     /**
      * @var array
      */
-    protected $fillable = ['id_mahasiswa', 'mata_kuliah'];
+    protected $fillable = ['id_mahasiswa', 'id_mata_kuliah'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -31,5 +31,13 @@ class MataKuliah extends Model
     public function mahasiswa()
     {
         return $this->belongsTo('App\Mahasiswa', 'id_mahasiswa');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function baseMataKuliah()
+    {
+        return $this->belongsTo('App\BaseMataKuliah', 'id_mata_kuliah');
     }
 }

@@ -29,6 +29,7 @@
                             <th width="5%">No</th>
                             <th>Nama</th>
                             <th>NIM</th>
+                            <th>Tanggal Upload</th>
                             <th width="20%">Action</th>
                         </tr>
                         </thead>
@@ -59,6 +60,7 @@
                 {data: 'no'},
                 {data: 'mahasiswa.nama'},
                 {data: 'mahasiswa.nim'},
+                {data: 'tanggal'},
                 {data: 'action'},
             ]
         });

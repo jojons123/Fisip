@@ -35,6 +35,7 @@ class AdminController extends Controller
         $data = Mahasiswa::get();
         foreach ($data as $i => $d) {
             $d->no = $i + 1;
+            $d->tanggal = date('d/m/Y', strtotime($d->created_at));
         }
         return DataTables::of($data)
             ->make(true);
@@ -92,7 +93,9 @@ class AdminController extends Controller
         $data = Upload::with('mahasiswa')->get();
         foreach ($data as $i => $d) {
             $d->no = $i + 1;
+            $d->tanggal = date('d/m/Y H:i:s', strtotime($d->created_at));
         }
+
         return DataTables::of($data)
             ->addColumn('action', function ($q) {
                 return '<button class="btn btn-primary" type="button" onclick="downloadFile(\'' . $q->id . '\')">Download</button> <button class="btn btn-danger" onclick="deleteFile(\'' . $q->id . '\')" type="button">Delete</button>';

@@ -32,6 +32,7 @@ class Upload extends Model
      * @var array
      */
     protected $fillable = ['id', 'id_mahasiswa', 'file_path', 'created_at', 'updated_at'];
+    protected $dates = ['created_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

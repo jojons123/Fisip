@@ -48,8 +48,14 @@
                                         </div>
 
                                         <div class="mt-10">
-                                            Dosen Pembimbing Utama :
+                                            Dosen Pembimbing Utama Riset :
                                             <input type="text" name="dosen_pembimbing_utama" required
+                                                   class="single-input">
+                                        </div>
+
+                                        <div class="mt-10">
+                                            Dosen Pembimbing Akademik :
+                                            <input type="text" name="dosen_pembimbing_akademik" required
                                                    class="single-input">
                                         </div>
 
@@ -163,6 +169,13 @@
                                                           onfocus="if (!window.__cfRLUnblockHandlers) return false; this.placeholder = ''"
                                                           onblur="if (!window.__cfRLUnblockHandlers) return false; this.placeholder = '{{ $question->placeholder }}'"></textarea>
 
+                                            @elseif($question->type == "checkbox")
+                                                @foreach($mata_kuliahs as $mk)
+                                                    <p>
+                                                        <input type="checkbox" id="cb-{{ $mk->id }}" name="{{ $question->slug }}" value="{{ $mk->id }}">
+                                                        <label for="cb-{{ $mk->id }}">{{ $mk->mata_kuliah }} / {{ $mk->sks }} SKS</label>
+                                                    </p>
+                                                @endforeach
                                             @elseif($question->type == "scale")
                                                 <br>
                                                 <br>
@@ -278,8 +291,8 @@
         showHideRadioButtonFalse(14, 15);
         showHideRadioButtonFalse(44, 20);
 
-        function submitValidation(){
-            $('#regForm').find('div:hidden').each(function(){
+        function submitValidation() {
+            $('#regForm').find('div:hidden').each(function () {
                 $(this).find('input').prop('checked', false);
             });
         }

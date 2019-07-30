@@ -27,7 +27,7 @@ class Mahasiswa extends Model
     /**
      * @var array
      */
-    protected $fillable = ['nama', 'nim', 'dosen_pembimbing_utama', 'tahun_masuk', 'jenjang_studi'];
+    protected $fillable = ['nama', 'nim', 'dosen_pembimbing_utama', 'tahun_masuk', 'jenjang_studi', 'dosen_pembimbing_akademik'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

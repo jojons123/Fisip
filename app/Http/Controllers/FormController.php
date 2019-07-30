@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Answer;
+use App\BaseMataKuliah;
 use App\DosenPembimbing;
 use App\Mahasiswa;
 use App\MataKuliah;
@@ -18,7 +19,8 @@ class FormController extends Controller
     public function index()
     {
         $sections = \App\Section::with('questions')->get();
-        return view('form', compact('sections'));
+        $mata_kuliahs = BaseMataKuliah::all();
+        return view('form', compact('sections', 'mata_kuliahs'));
     }
 
     public function store(Request $request)
@@ -31,6 +33,13 @@ class FormController extends Controller
             'jenjang_studi' => 'required|min:1|max:5'
         ]);
 
+        if(isset($request->mata_kuliah_belum)){
+            if(count($request->mata_kuliah_belum) > 10){
+                toastr()->error('Maksimum mata kuliah yang dipilih hanya 10');
+                return redirect()->back();
+            }
+        }
+
         $mahasiswa = Mahasiswa::create($request->all());
         foreach ($request->dosen_pembimbing_anggota as $dosen) {
             DosenPembimbing::create([
@@ -39,10 +48,10 @@ class FormController extends Controller
             ]);
         }
 
-        foreach ($request->mata_kuliah_belum_lulus as $matkul) {
+        foreach ($request->mata_kuliah_belum as $id_matkul) {
             MataKuliah::create([
                 'id_mahasiswa' => $mahasiswa->id,
-                'mata_kuliah' => $matkul
+                'id_mata_kuliah' => $id_matkul
             ]);
         }
 
@@ -77,11 +86,17 @@ class FormController extends Controller
                 if ($answer->question->type == "radio") {
                     $val = is_null($answer->answer) ? ' - ' : $answer->answer == '1' ? 'Ya' : 'Tidak';
                     $templateProcessor->setValue($answer->question->slug, $val);
-                } elseif ($answer->question->type == "multitext") {
+                } elseif ($answer->question->type == "checkbox") {
                     $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
+                    $temp = 0;
                     foreach ($mk as $i => $matkul){
                         $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
                         $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
+                        $temp++;
+                    }
+
+                    for($i=$temp; $i<=(int) $answer->question->prop; $i++){
+                        $templateProcessor->setValue('mata_kuliah_belum_' . ($i), '');
                     }
                 } else {
                     $templateProcessor->setValue($answer->question->slug, is_null($answer->answer) ? '' : $answer->answer);
@@ -184,7 +199,7 @@ class FormController extends Controller
 
         $temp_upload = Upload::where('id_mahasiswa', $mahasiswa->id)->get();
         if(count($temp_upload) > 0){
-            toastr()->error('Anda sudah mengupload file');
+            toastr()->error('Anda sudah mengupload file sebelumnya');
             return redirect()->back();
         }
 

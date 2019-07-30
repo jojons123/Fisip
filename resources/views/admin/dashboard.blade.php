@@ -26,12 +26,14 @@
                     <table class="table table-hover table-bordered" id="mahasiswa-table">
                         <thead>
                         <tr>
-                            <th>No</th>
+                            <th width="3%">No</th>
                             <th>Nama</th>
                             <th>NIM</th>
-                            <th>Dosen Pembimbing</th>
-                            <th>Tahun Masuk</th>
-                            <th>Jenjang Studi</th>
+                            <th>Pembimbing Riset</th>
+                            <th>Pembimbing Akademik</th>
+                            <th width="5%">Tahun Masuk</th>
+                            <th width="5%">Jenjang Studi</th>
+                            <th>Tanggal</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -61,8 +63,10 @@
                 {data: 'nama'},
                 {data: 'nim'},
                 {data: 'dosen_pembimbing_utama'},
+                {data: 'dosen_pembimbing_akademik'},
                 {data: 'tahun_masuk'},
                 {data: 'jenjang_studi'},
+                {data: 'tanggal'},
             ],
             drawCallback: function(s, j){
                 $(".clickable-row").click(function () {

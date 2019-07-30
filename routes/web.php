@@ -36,3 +36,6 @@ Route::post('/admin/upload/destroy', 'AdminController@deleteUploadFile');
 
 Route::get('/ajax/mahasiswa', 'AdminController@getDataMahasiswa');
 Route::get('/ajax/mahasiswa/upload', 'AdminController@getDataUpload');
+
+
+//Route::get('/drive', 'DriveController@getDrive');
