@@ -33,8 +33,8 @@ class FormController extends Controller
             'jenjang_studi' => 'required|min:1|max:5'
         ]);
 
-        if(isset($request->mata_kuliah_belum)){
-            if(count($request->mata_kuliah_belum) > 10){
+        if (isset($request->mata_kuliah_belum)) {
+            if (count($request->mata_kuliah_belum) > 10) {
                 toastr()->error('Maksimum mata kuliah yang dipilih hanya 10');
                 return redirect()->back();
             }
@@ -57,13 +57,13 @@ class FormController extends Controller
 
         $temp = $this->removeUsedParams($request);
         foreach ($temp->request as $index => $var) {
-            try{
+            try {
                 Answer::create([
                     'id_question' => Question::where('slug', $index)->first()->id,
                     'id_mahasiswa' => $mahasiswa->id,
                     'answer' => $var
                 ]);
-            } catch (\Exception $e){
+            } catch (\Exception $e) {
                 dd($index);
             }
         }
@@ -79,6 +79,7 @@ class FormController extends Controller
             $templateProcessor->setValue('nama', $data->nama);
             $templateProcessor->setValue('nim', $data->nim);
             $templateProcessor->setValue('dosen_pembimbing_utama', $data->dosen_pembimbing_utama);
+            $templateProcessor->setValue('dosen_pembimbing_akademik', $data->dosen_pembimbing_akademik);
             $templateProcessor->setValue('tahun_masuk', $data->tahun_masuk);
             $templateProcessor->setValue('jenjang_studi', $data->jenjang_studi);
 
@@ -91,16 +92,10 @@ class FormController extends Controller
                     $val = is_null($answer->answer) ? ' - ' : $answer->answer == '1' ? 'Ya' : 'Tidak';
                     $templateProcessor->setValue($answer->question->slug, $val);
                 } elseif ($answer->question->type == "checkbox") {
-                    $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
-                    $temp = 0;
-                    foreach ($mk as $i => $matkul){
-                        $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
+                    $mk = MataKuliah::with('baseMataKuliah')->where('id_mahasiswa', $data->id)->get();
+                    foreach ($mk as $i => $matkul) {
+                        $val = !is_null($matkul->baseMataKuliah->mata_kuliah) ? $matkul->baseMataKuliah->mata_kuliah . ' / ' . $matkul->baseMataKuliah->sks . ' SKS': '';
                         $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
-                        $temp++;
-                    }
-
-                    for($i=$temp; $i<=(int) $answer->question->prop; $i++){
-                        $templateProcessor->setValue('mata_kuliah_belum_' . ($i), '');
                     }
                 } else {
                     $templateProcessor->setValue($answer->question->slug, is_null($answer->answer) ? '' : $answer->answer);
@@ -161,7 +156,7 @@ class FormController extends Controller
                     $templateProcessor->setValue($answer->question->slug, $val);
                 } elseif ($answer->question->type == "multitext") {
                     $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
-                    foreach ($mk as $i => $matkul){
+                    foreach ($mk as $i => $matkul) {
                         $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
                         $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
                     }
@@ -181,11 +176,13 @@ class FormController extends Controller
         return $data;
     }
 
-    public function getUploadPage(){
+    public function getUploadPage()
+    {
         return view('upload');
     }
 
-    public function storeUpload(Request $request){
+    public function storeUpload(Request $request)
+    {
         $this->validate($request, [
             'nim' => 'required|numeric',
             'nama' => 'required',
@@ -194,7 +191,7 @@ class FormController extends Controller
 
         $mahasiswa = Mahasiswa::where('nim', $request->nim)->where('nama', $request->nama)->first();
 
-        if(is_null($mahasiswa)){
+        if (is_null($mahasiswa)) {
             toastr()->error('error', 'NIM atau Nama tidak tersedia');
             return redirect()->back();
         }
@@ -203,7 +200,7 @@ class FormController extends Controller
         $path = $file->store('public/files');
 
         $temp_upload = Upload::where('id_mahasiswa', $mahasiswa->id)->get();
-        if(count($temp_upload) > 0){
+        if (count($temp_upload) > 0) {
             toastr()->error('Anda sudah mengupload file sebelumnya');
             return redirect()->back();
         }

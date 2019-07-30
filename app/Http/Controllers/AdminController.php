@@ -50,6 +50,7 @@ class AdminController extends Controller
             $templateProcessor->setValue('nama', $data->nama);
             $templateProcessor->setValue('nim', $data->nim);
             $templateProcessor->setValue('dosen_pembimbing_utama', $data->dosen_pembimbing_utama);
+            $templateProcessor->setValue('dosen_pembimbing_akademik', $data->dosen_pembimbing_akademik);
             $templateProcessor->setValue('tahun_masuk', $data->tahun_masuk);
             $templateProcessor->setValue('jenjang_studi', $data->jenjang_studi);
 
@@ -57,16 +58,14 @@ class AdminController extends Controller
             $templateProcessor->setValue('dpa_2', $data->dosenPembimbings[1]->nama);
             $templateProcessor->setValue('dpa_3', $data->dosenPembimbings[2]->nama);
 
-//            return $data->answers;
-
             foreach ($data->answers as $answer) {
                 if ($answer->question->type == "radio") {
                     $val = is_null($answer->answer) ? ' - ' : $answer->answer == '1' ? 'Ya' : 'Tidak';
                     $templateProcessor->setValue($answer->question->slug, $val);
-                } elseif ($answer->question->type == "multitext") {
-                    $mk = MataKuliah::where('id_mahasiswa', $data->id)->get();
+                } elseif ($answer->question->type == "checkbox") {
+                    $mk = MataKuliah::with('baseMataKuliah')->where('id_mahasiswa', $data->id)->get();
                     foreach ($mk as $i => $matkul) {
-                        $val = !is_null($matkul->mata_kuliah) ? $matkul->mata_kuliah : '';
+                        $val = !is_null($matkul->baseMataKuliah->mata_kuliah) ? $matkul->baseMataKuliah->mata_kuliah . ' / ' . $matkul->baseMataKuliah->sks . ' SKS': '';
                         $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
                     }
                 } else {

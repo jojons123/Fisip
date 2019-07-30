@@ -5655,7 +5655,7 @@ h1, h2, h3, h4, h5, h6 {
 .single-textarea {
   display: block;
   width: 100%;
-  line-height: 40px;
+  line-height: 150%;
   border: none;
   outline: none;
   background: #f9f9ff;
