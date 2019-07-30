@@ -34,7 +34,7 @@
                         <h2>Upload Scan Form</h2>
                     </div>
                     <div class="text-center">
-                        <p>Masukan nama dan nim sesuai dengan yang diinputkan saat mengisi formulir</p>
+                        <p>Masukan nama dan nim sesuai dengan yang diinputkan saat mengisi formulir dengan ekstensi pdf dan ukuran maksimum 15mb</p>
                     </div>
                 </div>
             </div>
