@@ -184,7 +184,7 @@ class FormController extends Controller
         $this->validate($request, [
             'nim' => 'required|numeric',
             'nama' => 'required',
-            'file' => 'required|file|mimes:pdf'
+            'file' => 'required|file|mimes:pdf|max:15360'
         ]);
 
         $mahasiswa = Mahasiswa::where('nim', $request->nim)->where('nama', $request->nama)->first();
