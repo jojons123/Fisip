@@ -48,14 +48,14 @@
                                         </div>
 
                                         <div class="mt-10">
-                                            Dosen Pembimbing Utama Riset :
-                                            <input type="text" name="dosen_pembimbing_utama" required
+                                            Dosen Pembimbing Akademik :
+                                            <input type="text" name="dosen_pembimbing_akademik" required
                                                    class="single-input">
                                         </div>
 
                                         <div class="mt-10">
-                                            Dosen Pembimbing Akademik :
-                                            <input type="text" name="dosen_pembimbing_akademik" required
+                                            Dosen Pembimbing Utama Riset :
+                                            <input type="text" name="dosen_pembimbing_utama" required
                                                    class="single-input">
                                         </div>
 
@@ -172,8 +172,10 @@
                                             @elseif($question->type == "checkbox")
                                                 @foreach($mata_kuliahs as $mk)
                                                     <p>
-                                                        <input type="checkbox" id="cb-{{ $mk->id }}" name="{{ $question->slug }}" value="{{ $mk->id }}">
-                                                        <label for="cb-{{ $mk->id }}">{{ $mk->mata_kuliah }} / {{ $mk->sks }} SKS</label>
+                                                        <input type="checkbox" id="cb-{{ $mk->id }}"
+                                                               name="{{ $question->slug }}" value="{{ $mk->id }}">
+                                                        <label for="cb-{{ $mk->id }}">{{ $mk->mata_kuliah }}
+                                                            / {{ $mk->sks }} SKS</label>
                                                     </p>
                                                 @endforeach
                                             @elseif($question->type == "scale")
