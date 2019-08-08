@@ -1,11 +1,62 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "321dc332f8de21836b46df0ae5e284b0",
+    "content-hash": "7667e372f7423a2ec79d42d2da3ad1fd",
     "packages": [
+        {
+            "name": "cloudmersive/cloudmersive_document_convert_api_client",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Cloudmersive/Cloudmersive.APIClient.PHP.DocumentAndDataConvert.git",
+                "reference": "bdbebcdd81d5fc61f84fab690ff1d069ad299d4e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Cloudmersive/Cloudmersive.APIClient.PHP.DocumentAndDataConvert/zipball/bdbebcdd81d5fc61f84fab690ff1d069ad299d4e",
+                "reference": "bdbebcdd81d5fc61f84fab690ff1d069ad299d4e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.12",
+                "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Swagger\\Client\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Cloudmersive",
+                    "homepage": "https://cloudmersive.com"
+                }
+            ],
+            "homepage": "https://cloudmersive.com",
+            "keywords": [
+                "api",
+                "php",
+                "sdk",
+                "swagger"
+            ],
+            "time": "2019-08-04T02:26:16+00:00"
+        },
         {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "0.1",

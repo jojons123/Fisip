@@ -13,7 +13,7 @@
                 <div class="col-xl-5">
                     <div class="section_tittle text-center">
                         <p>Form</p>
-                        <h2>Kemajuan Studi</h2>
+                        <h2>Etika Penelitian</h2>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,9 @@
                                     @else
                                         <h3 style="text-align: center">{{ $section->name }}</h3>
                                     @endif
-
+                                    @if(!is_null($section->description))
+                                        <p style="text-align: justify;">{!! $section->description !!}</p>
+                                    @endif
                                     @if($section->id == 1)
                                         <div class="mt-10">
                                             Nama :
@@ -106,7 +108,7 @@
 
                                     @foreach($section->questions as $question)
                                         <div class="mt-10" id="input-q-{{$question->id}}">
-                                            {{ $question->question }}
+                                            {!! $question->question !!}
                                             @if($question->type == "text")
                                                 <input type="text" name="{{ $question->slug }}"
                                                        placeholder="{{ $question->placeholder }}"
@@ -244,16 +246,6 @@
     <script>
 
         $(document).ready(function () {
-            $('#input-q-4').hide();
-            $('#input-q-3').hide();
-            $('#input-q-29').hide();
-            $('#input-q-15').hide();
-            $('#input-q-17').hide();
-            $('#input-q-44').hide();
-            $('#input-q-18').hide();
-            $('#input-q-19').hide();
-            $('#input-q-20').hide();
-            $('#input-q-22').hide();
         });
 
 
