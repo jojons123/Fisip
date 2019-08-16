@@ -214,4 +214,15 @@ class FormController extends Controller
         toastr()->success('File berhasil diupload');
         return redirect()->back();
     }
+
+    public function getForm1(){
+        $sections = \App\Section::with('questions')->where('id', '<', 13)->get();
+        return view('form', compact('sections'));
+    }
+
+    public function getForm2(){
+        $sections = \App\Section::with('questions')->where('id', '>=', 13)->get();
+        return $sections;
+        return view('form', compact('sections', 'mata_kuliahs'));
+    }
 }
