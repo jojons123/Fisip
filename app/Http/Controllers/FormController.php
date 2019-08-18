@@ -10,6 +10,7 @@ use App\MataKuliah;
 use App\Question;
 use App\Upload;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -23,49 +24,45 @@ class FormController extends Controller
         return view('form', compact('sections', 'mata_kuliahs'));
     }
 
-    public function store(Request $request)
+    public function storeForm1(Request $request)
     {
-        $this->validate($request, [
-            'nama' => 'required',
-            'nim' => 'required|numeric',
-            'dosen_pembimbing_utama' => 'required',
-            'tahun_masuk' => 'required|numeric',
-            'jenjang_studi' => 'required|min:1|max:5'
-        ]);
+        $mahasiswa = Mahasiswa::where('user_id', Auth::id())->firstOrFail();
+        $temp = $this->removeUsedParamsForm1($request);
+        try {
+            \DB::transaction(function() use ($temp, $mahasiswa){
+                foreach ($temp->request as $index => $var) {
+                    Answer::create([
+                        'id_question' => Question::where('slug', $index)->first()->id,
+                        'id_mahasiswa' => $mahasiswa->id,
+                        'answer' => $var
+                    ]);
 
-        if (isset($request->mata_kuliah_belum)) {
-            if (count($request->mata_kuliah_belum) > 10) {
-                toastr()->error('Maksimum mata kuliah yang dipilih hanya 10');
-                return redirect()->back();
-            }
+                }
+            });
+        } catch (\Exception $e) {
+            dd($e);
         }
 
-        $mahasiswa = Mahasiswa::create($request->all());
-        foreach ($request->dosen_pembimbing_anggota as $dosen) {
-            DosenPembimbing::create([
-                'id_mahasiswa' => $mahasiswa->id,
-                'nama' => $dosen
-            ]);
-        }
+        return $this->getForm($mahasiswa->id);
+    }
 
-        foreach ($request->mata_kuliah_belum as $id_matkul) {
-            MataKuliah::create([
-                'id_mahasiswa' => $mahasiswa->id,
-                'id_mata_kuliah' => $id_matkul
-            ]);
-        }
+    public function storeForm2(Request $request)
+    {
+        $mahasiswa = Mahasiswa::where('user_id', Auth::id())->firstOrFail();
+        $temp = $this->removeUsedParamsForm2($request);
+        try {
+            \DB::transaction(function() use ($temp, $mahasiswa){
+                foreach ($temp->request as $index => $var) {
+                    Answer::create([
+                        'id_question' => Question::where('slug', $index)->first()->id,
+                        'id_mahasiswa' => $mahasiswa->id,
+                        'answer' => $var
+                    ]);
 
-        $temp = $this->removeUsedParams($request);
-        foreach ($temp->request as $index => $var) {
-            try {
-                Answer::create([
-                    'id_question' => Question::where('slug', $index)->first()->id,
-                    'id_mahasiswa' => $mahasiswa->id,
-                    'answer' => $var
-                ]);
-            } catch (\Exception $e) {
-                dd($index);
-            }
+                }
+            });
+        } catch (\Exception $e) {
+            dd($e);
         }
 
         return $this->getForm($mahasiswa->id);
@@ -94,7 +91,7 @@ class FormController extends Controller
                 } elseif ($answer->question->type == "checkbox") {
                     $mk = MataKuliah::with('baseMataKuliah')->where('id_mahasiswa', $data->id)->get();
                     foreach ($mk as $i => $matkul) {
-                        $val = !is_null($matkul->baseMataKuliah->mata_kuliah) ? $matkul->baseMataKuliah->mata_kuliah . ' / ' . $matkul->baseMataKuliah->sks . ' SKS': '';
+                        $val = !is_null($matkul->baseMataKuliah->mata_kuliah) ? $matkul->baseMataKuliah->mata_kuliah . ' / ' . $matkul->baseMataKuliah->sks . ' SKS' : '';
                         $templateProcessor->setValue('mata_kuliah_belum_' . ($i + 1), $val);
                     }
                 } else {
@@ -111,26 +108,25 @@ class FormController extends Controller
         }
     }
 
-    private function removeUsedParams(Request $request)
+    private function removeUsedParamsForm1(Request $request)
     {
-        $request->request->remove('_token');
-        $request->request->remove('nama');
-        $request->request->remove('nim');
-        $request->request->remove('dosen_pembimbing_utama');
-        $request->request->remove('dosen_pembimbing_anggota');
-        $request->request->remove('dosen_pembimbing_akademik');
-        $request->request->remove('tahun_masuk');
-        $request->request->remove('jenjang_studi');
-        $request->request->remove('mata_kuliah_belum');
-
-        $questions = Question::select(['id', 'slug'])->get();
+        $questions = Question::select(['id', 'slug'])->where('section', '<', 13)->get();
         foreach ($questions as $question) {
             if (!$request->has($question->slug)) {
                 $request->request->set($question->slug, null);
             }
         }
+        return $request;
+    }
 
-
+    private function removeUsedParamsForm2(Request $request)
+    {
+        $questions = Question::select(['id', 'slug'])->where('section', '<', 13)->get();
+        foreach ($questions as $question) {
+            if (!$request->has($question->slug)) {
+                $request->request->set($question->slug, null);
+            }
+        }
         return $request;
     }
 
@@ -213,5 +209,19 @@ class FormController extends Controller
 
         toastr()->success('File berhasil diupload');
         return redirect()->back();
+    }
+
+    public function getForm1()
+    {
+        $sumber_dana_penelitian = ['Biaya Pribadi', 'Beasiswa', 'Subsidi pihak ketiga'];
+        $sections = \App\Section::with('questions')->where('id', '<', 13)->get();
+        return view('form-1', compact('sections', 'sumber_dana_penelitian'));
+    }
+
+    public function getForm2()
+    {
+        $sumber_dana_penelitian = ['Biaya Pribadi', 'Beasiswa', 'Subsidi pihak ketiga'];
+        $sections = \App\Section::with('questions')->where('id', '>=', 13)->get();
+        return view('form-2', compact('sections', 'sumber_dana_penelitian'));
     }
 }

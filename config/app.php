@@ -179,6 +179,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yoeunes\Toastr\ToastrServiceProvider::class,
         App\Providers\GoogleDriveServiceProvider::class,
+        Silber\Bouncer\BouncerServiceProvider::class,
     ],
 
     /*
@@ -231,7 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-
+        'Bouncer' => Silber\Bouncer\BouncerFacade::class,
     ],
 
 ];

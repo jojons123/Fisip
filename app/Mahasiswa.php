@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property int $id
@@ -27,7 +28,7 @@ class Mahasiswa extends Model
     /**
      * @var array
      */
-    protected $fillable = ['nama', 'nim', 'dosen_pembimbing_utama', 'tahun_masuk', 'jenjang_studi', 'dosen_pembimbing_akademik'];
+    protected $fillable = ['nama', 'user_id', 'nim', 'alamat', 'universitas', 'fakultas', 'prodi', 'semester', 'no_hp', 'form1', 'form2'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -57,5 +58,26 @@ class Mahasiswa extends Model
         return Question::with('answers')->whereHas('answers', function($q){
             $q->where('id_mahasiswa', 12);
         })->get();
+    }
+
+    public function deleteData(){
+        \DB::transaction(function(){
+            $user = $this->user();
+            $user->delete();
+            Answer::where('id_mahasiswa', $this->id)->delete();
+            $this->delete();
+        });
+    }
+
+    public static function getForm1Status(){
+        return Mahasiswa::where('user_id', Auth::id())->firstOrFail()->form1;
+    }
+
+    public static function getForm2Status(){
+        return Mahasiswa::where('user_id', Auth::id())->firstOrFail()->form2;
+    }
+
+    public function user(){
+        return $this->belongsTo('App\User', 'user_id');
     }
 }

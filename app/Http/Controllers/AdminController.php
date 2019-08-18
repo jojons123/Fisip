@@ -34,10 +34,17 @@ class AdminController extends Controller
     {
         $data = Mahasiswa::get();
         foreach ($data as $i => $d) {
+            $d->nama = $d->user->name;
             $d->no = $i + 1;
             $d->tanggal = date('d/m/Y', strtotime($d->created_at));
+            $d->form_1 = $d->form1 == 1 ? 'Sudah' : 'Belum';
+            $d->form_2 = $d->form2 == 1 ? 'Sudah' : 'Belum';
         }
+
         return DataTables::of($data)
+            ->addColumn('action', function ($q) {
+                return '<button class="btn btn-primary" type="button" onclick="downloadFile(\'' . $q->id . '\')">Download</button> <button class="btn btn-danger" onclick="deleteData(\'' . $q->id . '\')" type="button">Delete</button>';
+            })->rawColumns(['action'])
             ->make(true);
     }
 
@@ -111,6 +118,12 @@ class AdminController extends Controller
     public function deleteUploadFile(Request $request)
     {
         Upload::findOrFail($request->id)->delete();
+        return redirect()->back();
+    }
+
+    public function deleteMahasiswa($id){
+        Mahasiswa::findOrFail($id)->deleteData();
+        toastr()->success('Data berhasil dihapus');
         return redirect()->back();
     }
 }
