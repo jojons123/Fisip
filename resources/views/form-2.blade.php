@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="container">
-                        <form id="regForm" action="/form" method="post" onsubmit="submitValidation()">
+                        <form id="regForm" action="/form-2" method="post" onsubmit="submitValidation()">
                         @csrf
                         <!-- One "tab" for each step in the form: -->
                             @foreach($sections as $section)
@@ -30,80 +30,13 @@
                                 <div class="tab" data-section="{{ $section->id }}">
 
                                     @if(!is_null($section->parent_id))
-                                        <h3 style="text-align: center">{{ \App\Section::find($section->parent_id)->name }}</h3>
-                                        <h4 style="text-align: center">{{ $section->name }}</h4>
+                                        <h3 style="text-align: center">{!! \App\Section::find($section->parent_id)->name !!}</h3>
+                                        <h4 style="text-align: center">{!! $section->name !!}</h4>
                                     @else
-                                        <h3 style="text-align: center">{{ $section->name }}</h3>
+                                        <h3 style="text-align: center">{!! $section->name !!}</h3>
                                     @endif
                                     @if(!is_null($section->description))
                                         <p style="text-align: justify;">{!! $section->description !!}</p>
-                                    @endif
-                                    @if($section->id == 1)
-                                        <div class="mt-10">
-                                            Nama :
-                                            <input type="text" name="nama" required class="single-input">
-                                        </div>
-
-                                        <div class="mt-10">
-                                            NIM :
-                                            <input type="number" name="nim" min="0" required class="single-input">
-                                        </div>
-
-                                        <div class="mt-10">
-                                            Dosen Pembimbing Akademik :
-                                            <input type="text" name="dosen_pembimbing_akademik" required
-                                                   class="single-input">
-                                        </div>
-
-                                        <div class="mt-10">
-                                            Dosen Pembimbing Utama Riset :
-                                            <input type="text" name="dosen_pembimbing_utama" required
-                                                   class="single-input">
-                                        </div>
-
-                                        <div class="multiple-val">
-                                            Dosen Pembimbing Anggota :
-                                            <div class="mt-10">
-                                                <input type="text" name="dosen_pembimbing_anggota[]"
-                                                       placeholder="Dosen Pembimbing Anggota 1"
-                                                       onfocus="this.placeholder = ''"
-                                                       onblur="this.placeholder = 'Dosen Pembimbing Anggota 1'"
-                                                       class="single-input">
-                                            </div>
-
-                                            <div class="mt-10">
-                                                <input type="text" name="dosen_pembimbing_anggota[]"
-                                                       placeholder="Dosen Pembimbing Anggota 2"
-                                                       onfocus="this.placeholder = ''"
-                                                       onblur="this.placeholder = 'Dosen Pembimbing Anggota 2'"
-                                                       class="single-input">
-                                            </div>
-
-                                            <div class="mt-10">
-                                                <input type="text" name="dosen_pembimbing_anggota[]"
-                                                       placeholder="Dosen Pembimbing Anggota 3"
-                                                       onfocus="this.placeholder = ''"
-                                                       onblur="this.placeholder = 'Dosen Pembimbing Anggota 3'"
-                                                       class="single-input">
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-10">
-                                            Periode Maximum Waktu Studi :
-                                            <input type="text" disabled class="single-input"
-                                                   value="2 Tahun (Magister Ilmu Administrasi)">
-                                        </div>
-
-                                        <div class="mt-10">
-                                            Tahun Masuk :
-                                            <input type="number" name="tahun_masuk" required class="single-input">
-                                        </div>
-
-                                        <div class="mt-10">
-                                            Jenjang Studi :
-                                            <input type="text" name="jenjang_studi" required class="single-input">
-                                        </div>
-
                                     @endif
 
                                     @foreach($section->questions as $question)
@@ -141,6 +74,38 @@
                                                     </div>
                                                 </div>
 
+                                            @elseif($question->type == "multiradio")
+                                                <div class="col-md3">
+                                                    @foreach(${$question->prop} as $index => $property)
+                                                        <div class="switch-wrap d-flex justify-content-between">
+                                                            <label for="radio-{{ $question->id}}-{{ $index+1 }}"
+                                                                   class="clickable">
+                                                                <p>{{ $property }}</p></label>
+                                                            <div class="primary-radio">
+                                                                <input type="radio"
+                                                                       id="radio-{{ $question->id}}-{{ $index+1 }}"
+                                                                       name="{{ $question->slug }}"
+                                                                       value="{{ $property }}">
+                                                                <label for="radio-{{ $question->id}}-{{ $index+1 }}"></label>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    <div class="switch-wrap d-flex justify-content-between">
+                                                        <label for="radio-{{ $question->id}}-{{ count(${$question->prop}) + 1 }}"
+                                                               class="clickable">
+                                                            <p>Lain - lain</p></label>
+                                                        <div class="primary-radio">
+                                                            <input type="radio"
+                                                                   id="radio-{{ $question->id}}-{{ count(${$question->prop}) + 1 }}"
+                                                                   name="{{ $question->slug }}"
+                                                                   value="etc">
+                                                            <label for="radio-{{ $question->id}}-{{ count(${$question->prop}) + 1 }}"></label>
+                                                        </div>
+                                                    </div>
+                                                    <input type="text" name="{{ $question->slug }}_etc"
+                                                           placeholder="Masukan sumber dana"
+                                                           class="single-input">
+                                                </div>
                                             @elseif($question->type == "date")
                                                 <input type="date" name="{{ $question->slug }}" required
                                                        class="single-input"
@@ -172,14 +137,32 @@
                                                           onblur="if (!window.__cfRLUnblockHandlers) return false; this.placeholder = '{{ $question->placeholder }}'"></textarea>
 
                                             @elseif($question->type == "checkbox")
-                                                @foreach($mata_kuliahs as $mk)
-                                                    <p>
-                                                        <input type="checkbox" id="cb-{{ $mk->id }}"
-                                                               name="{{ $question->slug }}" value="{{ $mk->id }}">
-                                                        <label for="cb-{{ $mk->id }}">{{ $mk->mata_kuliah }}
-                                                            / {{ $mk->sks }} SKS</label>
-                                                    </p>
+                                                @foreach(explode('|', $question->prop) as $index => $items)
+                                                <div class="switch-wrap d-flex justify-content-between">
+                                                    <p>{{ ($index + 1) . '. ' . $items }}</p>
+                                                    <input type="checkbox" id="checkbox-{{ $question->id }}-{{ $index + 1 }}" name="{{ $question->slug }}">
+                                                    <label for="checkbox-{{ $question->id }}-{{ $index + 1 }}"></label>
+                                                </div>
                                                 @endforeach
+                                            @elseif($question->type == "checkbox+")
+                                                @foreach(explode('|', $question->prop) as $index => $items)
+
+                                                    <div class="switch-wrap d-flex justify-content-between">
+                                                        <p>{{ ($index + 1) . '. ' . $items }}</p>
+                                                        <input type="checkbox" id="checkbox-{{ $question->id }}-{{ $index + 1 }}" name="{{ $question->slug }}">
+                                                        <label for="checkbox-{{ $question->id }}-{{ $index + 1 }}"></label>
+                                                    </div>
+
+                                                @endforeach
+                                                    <div class="col-md-12">
+                                                        <div class="switch-wrap d-flex justify-content-between">
+                                                            <input type="text" name="{{ $question->slug }}_etc"
+                                                                   placeholder="Lainnya"
+                                                                   class="single-input">
+                                                            <input type="checkbox" id="checkbox-{{ $question->id }}-{{ count(explode('|', $question->prop)) + 1 }}" name="{{ $question->slug }}">
+                                                            <label for="checkbox-{{ $question->id }}-{{ count(explode('|', $question->prop)) + 1 }}"></label>
+                                                        </div>
+                                                    </div>
                                             @elseif($question->type == "scale")
                                                 <br>
                                                 <br>
@@ -246,6 +229,10 @@
     <script>
 
         $(document).ready(function () {
+            $('#input-q-144').hide();
+            $('#input-q-145').hide();
+            $('#input-q-146').hide();
+            $('#input-q-147').hide();
         });
 
 
@@ -274,21 +261,20 @@
             });
         }
 
-        showHideRadioButton(26, 3);
-        showHideRadioButton(3, 29);
-        showHideRadioButton(3, 4);
-        showHideRadioButton(16, 17);
-        showHideRadioButton(17, 44);
-        showHideRadioButton(44, 18);
-        showHideRadioButton(44, 19);
-        showHideRadioButton(21, 22);
-        showHideRadioButtonFalse(14, 15);
-        showHideRadioButtonFalse(44, 20);
+        showHideRadioButton(143, 144);
+        showHideRadioButton(143, 145);
+        showHideRadioButton(143, 146);
+        showHideRadioButton(143, 147);
 
         function submitValidation() {
             $('#regForm').find('div:hidden').each(function () {
                 $(this).find('input').prop('checked', false);
             });
         }
+
+        function createCheckbox(id, slug, label, parent) {
+
+        }
     </script>
 @endsection
+

@@ -29,11 +29,11 @@
                             <th width="3%">No</th>
                             <th>Nama</th>
                             <th>NIM</th>
-                            <th>Pembimbing Riset</th>
-                            <th>Pembimbing Akademik</th>
-                            <th width="5%">Tahun Masuk</th>
-                            <th width="5%">Jenjang Studi</th>
+                            <th>No HP</th>
+                            <th width="5%">Form 1</th>
+                            <th width="5%">Form 2</th>
                             <th>Tanggal</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -44,6 +44,10 @@
             </div>
         </div>
     </div>
+    <form action="/admin/mahasiswa/-1/destroy" method="post" id="delete-form">
+        @csrf
+
+    </form>
 
 @endsection
 
@@ -54,27 +58,21 @@
             serverSide: true,
             responsive: true,
             ajax: '{{ url('ajax/mahasiswa') }}',
-            createdRow: function (row, data, index) {
-                $(row).addClass('clickable-row');
-                $(row).attr('data-href', "/admin/mahasiswa/" + data["id"]);
-            },
             columns: [
                 {data: 'no'},
                 {data: 'nama'},
                 {data: 'nim'},
-                {data: 'dosen_pembimbing_utama'},
-                {data: 'dosen_pembimbing_akademik'},
-                {data: 'tahun_masuk'},
-                {data: 'jenjang_studi'},
+                {data: 'no_hp'},
+                {data: 'form_1'},
+                {data: 'form_2'},
                 {data: 'tanggal'},
+                {data: 'action'},
             ],
-            drawCallback: function(s, j){
-                $(".clickable-row").click(function () {
-                    window.location = $(this).data("href");
-                });
-            }
         });
 
-
+        function deleteData(id) {
+            $('#delete-form').attr('action', '/admin/mahasiswa/'+ id +'/destroy');
+            $('#delete-form').submit();
+        }
     </script>
 @endsection

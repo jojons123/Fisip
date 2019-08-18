@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Answer;
 use App\Mahasiswa;
 use App\User;
 use Illuminate\Http\Request;
@@ -55,6 +56,10 @@ class MahasiswaController extends Controller
             toastr()->warning('Something error');
             return redirect('/dashboard');
         }
+        $sumber_dana_penelitian = ['Biaya Pribadi', 'Beasiswa', 'Subsidi pihak ketiga'];
+        $sections = \App\Section::with('questions')->where('id', '<', 13)->get();
+        $answers = Answer::where('id_mahasiswa', Auth::id())->get();
+        return view('mahasiswa.form-1', compact('sumber_dana_penelitian', 'sections', 'answers'));
     }
 
     public function showEditForm2(){
@@ -63,14 +68,16 @@ class MahasiswaController extends Controller
             toastr()->warning('Something error');
             return redirect('/dashboard');
         }
-        return "asd";
+        $sections = \App\Section::with('questions')->where('id', '>=', 13)->get();
+        $answers = Answer::where('id_mahasiswa', Auth::id())->get();
+        return view('mahasiswa.form-2', compact('sections', 'answers'));
     }
 
-    public function updateForm1(){
-        return "asd";
+    public function updateForm1(Request $request){
+
     }
 
-    public function updateForm2(){
+    public function updateForm2(Request $request){
 
     }
 

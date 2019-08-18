@@ -42,6 +42,7 @@ Route::group(['middleware' => 'can:admin-page'], function(){
 
     Route::get('/ajax/mahasiswa', 'AdminController@getDataMahasiswa');
     Route::get('/ajax/mahasiswa/upload', 'AdminController@getDataUpload');
+    Route::post('/admin/mahasiswa/{id}/destroy', 'AdminController@deleteMahasiswa');
 });
 
 Route::group(['middleware' => 'can:mahasiswa-page'], function(){

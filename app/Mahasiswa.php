@@ -60,11 +60,24 @@ class Mahasiswa extends Model
         })->get();
     }
 
+    public function deleteData(){
+        \DB::transaction(function(){
+            $user = $this->user();
+            $user->delete();
+            Answer::where('id_mahasiswa', $this->id)->delete();
+            $this->delete();
+        });
+    }
+
     public static function getForm1Status(){
         return Mahasiswa::where('user_id', Auth::id())->firstOrFail()->form1;
     }
 
     public static function getForm2Status(){
         return Mahasiswa::where('user_id', Auth::id())->firstOrFail()->form2;
+    }
+
+    public function user(){
+        return $this->belongsTo('App\User', 'user_id');
     }
 }
