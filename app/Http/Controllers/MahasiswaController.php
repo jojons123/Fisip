@@ -58,7 +58,7 @@ class MahasiswaController extends Controller
         }
         $sumber_dana_penelitian = ['Biaya Pribadi', 'Beasiswa', 'Subsidi pihak ketiga'];
         $sections = \App\Section::with('questions')->where('id', '<', 13)->get();
-        $answers = Answer::where('id_mahasiswa', Auth::id())->get();
+        $answers = Answer::where('id_mahasiswa', Mahasiswa::where('user_id', Auth::id())->first()->id)->get();
         return view('mahasiswa.form-1', compact('sumber_dana_penelitian', 'sections', 'answers'));
     }
 
@@ -69,7 +69,7 @@ class MahasiswaController extends Controller
             return redirect('/dashboard');
         }
         $sections = \App\Section::with('questions')->where('id', '>=', 13)->get();
-        $answers = Answer::where('id_mahasiswa', Auth::id())->get();
+        $answers = Answer::where('id_mahasiswa', Mahasiswa::where('user_id', Auth::id())->first()->id)->get();
         return view('mahasiswa.form-2', compact('sections', 'answers'));
     }
 

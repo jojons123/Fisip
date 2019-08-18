@@ -11,6 +11,7 @@ use App\Question;
 use App\Upload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -24,26 +25,37 @@ class FormController extends Controller
         return view('form', compact('sections', 'mata_kuliahs'));
     }
 
+    private $x = [];
+
     public function storeForm1(Request $request)
     {
         $mahasiswa = Mahasiswa::where('user_id', Auth::id())->firstOrFail();
         $temp = $this->removeUsedParamsForm1($request);
         try {
-            \DB::transaction(function() use ($temp, $mahasiswa){
-                foreach ($temp->request as $index => $var) {
-                    Answer::create([
-                        'id_question' => Question::where('slug', $index)->first()->id,
-                        'id_mahasiswa' => $mahasiswa->id,
-                        'answer' => $var
-                    ]);
-
+            DB::beginTransaction();
+            foreach ($temp->request as $index => $var) {
+                $t = explode('_', $index);
+                if($t[count($t)-1] == "etc"){
+                    // TODO : etc
+                    continue;
                 }
-            });
+                Answer::create([
+                    'id_question' => Question::where('slug', $index)->first()->id,
+                    'id_mahasiswa' => $mahasiswa->id,
+                    'answer' => $var
+                ]);
+
+            }
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e);
         }
 
-        return $this->getForm($mahasiswa->id);
+        $mahasiswa->update(['form1' => 1]);
+        toastr()->success('Form berhasil diisi');
+        return redirect('/dashboard');
+//        return $this->getForm($mahasiswa->id);
     }
 
     public function storeForm2(Request $request)
@@ -51,21 +63,29 @@ class FormController extends Controller
         $mahasiswa = Mahasiswa::where('user_id', Auth::id())->firstOrFail();
         $temp = $this->removeUsedParamsForm2($request);
         try {
-            \DB::transaction(function() use ($temp, $mahasiswa){
-                foreach ($temp->request as $index => $var) {
-                    Answer::create([
-                        'id_question' => Question::where('slug', $index)->first()->id,
-                        'id_mahasiswa' => $mahasiswa->id,
-                        'answer' => $var
-                    ]);
-
+            DB::beginTransaction();
+            foreach ($temp->request as $index => $var) {
+                $t = explode('_', $index);
+                if($t[count($t)-1] == "etc"){
+                    // TODO : etc
+                    continue;
                 }
-            });
+                Answer::create([
+                    'id_question' => Question::where('slug', $index)->first()->id,
+                    'id_mahasiswa' => $mahasiswa->id,
+                    'answer' => $var
+                ]);
+
+            }
+            DB::commit();
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e);
         }
-
-        return $this->getForm($mahasiswa->id);
+        $mahasiswa->update(['form2' => 1]);
+        toastr()->success('Form berhasil diisi');
+        return redirect('/dashboard');
+//        return $this->getForm($mahasiswa->id);
     }
 
     public function getForm($id)
@@ -110,6 +130,7 @@ class FormController extends Controller
 
     private function removeUsedParamsForm1(Request $request)
     {
+        $request->request->remove('_token');
         $questions = Question::select(['id', 'slug'])->where('section', '<', 13)->get();
         foreach ($questions as $question) {
             if (!$request->has($question->slug)) {
@@ -121,6 +142,7 @@ class FormController extends Controller
 
     private function removeUsedParamsForm2(Request $request)
     {
+        $request->request->remove('_token');
         $questions = Question::select(['id', 'slug'])->where('section', '<', 13)->get();
         foreach ($questions as $question) {
             if (!$request->has($question->slug)) {

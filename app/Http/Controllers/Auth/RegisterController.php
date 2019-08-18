@@ -71,7 +71,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        \DB::transaction(function() use ($data){
+//        \DB::transaction(function() use ($data){
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
@@ -90,6 +90,8 @@ class RegisterController extends Controller
             ]);
 
             return $user;
-        });
+//        });
+//
+//        return null;
     }
 }
