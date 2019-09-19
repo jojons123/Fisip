@@ -94,13 +94,6 @@
                                                         <label for="radio-{{ $question->id}}-{{ count(${$question->prop}) + 1 }}"
                                                                class="clickable">
                                                             <p>Lain - lain</p></label>
-                                                        <div class="primary-radio">
-                                                            <input type="radio"
-                                                                   id="radio-{{ $question->id}}-{{ count(${$question->prop}) + 1 }}"
-                                                                   name="{{ $question->slug }}"
-                                                                   value="etc">
-                                                            <label for="radio-{{ $question->id}}-{{ count(${$question->prop}) + 1 }}"></label>
-                                                        </div>
                                                     </div>
                                                     <input type="text" name="{{ $question->slug }}_etc"
                                                            placeholder="Masukan sumber dana"
@@ -140,7 +133,7 @@
                                                 @foreach(explode('|', $question->prop) as $index => $items)
                                                 <div class="switch-wrap d-flex justify-content-between">
                                                     <p>{{ ($index + 1) . '. ' . $items }}</p>
-                                                    <input type="checkbox" id="checkbox-{{ $question->id }}-{{ $index + 1 }}" name="{{ $question->slug }}">
+                                                    <input type="checkbox" id="checkbox-{{ $question->id }}-{{ $index + 1 }}" name="{{ $question->slug }}[]" value="{{ $items }}">
                                                     <label for="checkbox-{{ $question->id }}-{{ $index + 1 }}"></label>
                                                 </div>
                                                 @endforeach

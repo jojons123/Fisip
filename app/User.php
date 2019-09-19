@@ -40,6 +40,6 @@ class User extends Authenticatable
     ];
 
     public function mahasiswa(){
-        return $this->hasMany('App\Mahasiswa', 'user_id');
+        return $this->hasOne('App\Mahasiswa', 'user_id');
     }
 }

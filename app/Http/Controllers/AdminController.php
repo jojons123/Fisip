@@ -43,7 +43,7 @@ class AdminController extends Controller
 
         return DataTables::of($data)
             ->addColumn('action', function ($q) {
-                return '<button class="btn btn-primary" type="button" onclick="downloadFile(\'' . $q->id . '\')">Download</button> <button class="btn btn-danger" onclick="deleteData(\'' . $q->id . '\')" type="button">Delete</button>';
+                return '<button class="btn btn-danger" onclick="deleteData(\'' . $q->id . '\')" type="button">Delete</button>';
             })->rawColumns(['action'])
             ->make(true);
     }
@@ -104,7 +104,7 @@ class AdminController extends Controller
 
         return DataTables::of($data)
             ->addColumn('action', function ($q) {
-                return '<button class="btn btn-primary" type="button" onclick="downloadFile(\'' . $q->id . '\')">Download</button> <button class="btn btn-danger" onclick="deleteFile(\'' . $q->id . '\')" type="button">Delete</button>';
+                return ' <button class="btn btn-danger" onclick="deleteFile(\'' . $q->id . '\')" type="button">Delete</button>';
             })->rawColumns(['action'])
             ->make(true);
     }

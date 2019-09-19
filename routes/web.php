@@ -56,8 +56,15 @@ Route::group(['middleware' => 'can:mahasiswa-page'], function(){
     Route::get('/dashboard', 'MahasiswaController@index');
     Route::get('/dashboard/form-1', 'MahasiswaController@showEditForm1');
     Route::get('/dashboard/form-2', 'MahasiswaController@showEditForm2');
-    Route::post('/dashboard/form-1', 'MahasiswaController@updateForm1');
-    Route::post('/dashboard/form-2', 'MahasiswaController@updateForm2');
+    Route::post('/dashboard/form-1', 'MahasiswaController@updateForm1')->name('update-form1');
+    Route::post('/dashboard/form-2', 'MahasiswaController@updateForm2')->name('update-form2');
+});
+
+Route::get('test', function(){
+    $mahasiswa = Auth::user()->mahasiswa;
+    return \App\Answer::where('id_mahasiswa', $mahasiswa->id)->whereHas('question', function($q){
+        $q->where('id', '<', 13);
+    })->get();
 });
 
 //Route::get('test', function(){

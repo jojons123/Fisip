@@ -18,11 +18,13 @@
             <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
             <p>Formulir 1</p>
         </div>
+        <button class="btn btn-primary" id="save-print">Simpan dan Cetak</button>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <form action="{{ route('update-profile') }}" method="post">
+            <form action="{{ route('update-form1') }}" method="post" id="form">
                 @csrf
+                <input type="hidden" name="print" value="0" id="print">
                 @foreach($sections as $section)
                     @if($section->visible == 0)
                         @continue
@@ -108,5 +110,10 @@
 @endsection
 
 @section('js')
-
+    <script>
+        $('#save-print').on('click', function(){
+            $('#print').val(1);
+            $('#form').submit();
+        })
+    </script>
 @endsection
