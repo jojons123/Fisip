@@ -142,7 +142,7 @@
 
                                                     <div class="switch-wrap d-flex justify-content-between">
                                                         <p>{{ ($index + 1) . '. ' . $items }}</p>
-                                                        <input type="checkbox" id="checkbox-{{ $question->id }}-{{ $index + 1 }}" name="{{ $question->slug }}">
+                                                        <input type="checkbox" id="checkbox-{{ $question->id }}-{{ $index + 1 }}" name="{{ $question->slug }}[]" value="{{ $items }}">
                                                         <label for="checkbox-{{ $question->id }}-{{ $index + 1 }}"></label>
                                                     </div>
 
@@ -150,10 +150,8 @@
                                                     <div class="col-md-12">
                                                         <div class="switch-wrap d-flex justify-content-between">
                                                             <input type="text" name="{{ $question->slug }}_etc"
-                                                                   placeholder="Lainnya"
+                                                                   placeholder="Bahasa Lainnya (Dipisahkan oleh koma)"
                                                                    class="single-input">
-                                                            <input type="checkbox" id="checkbox-{{ $question->id }}-{{ count(explode('|', $question->prop)) + 1 }}" name="{{ $question->slug }}">
-                                                            <label for="checkbox-{{ $question->id }}-{{ count(explode('|', $question->prop)) + 1 }}"></label>
                                                         </div>
                                                     </div>
                                             @elseif($question->type == "scale")

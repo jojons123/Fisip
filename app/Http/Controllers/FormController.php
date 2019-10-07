@@ -64,8 +64,21 @@ class FormController extends Controller
         $temp = $this->removeUsedParamsForm2($request);
         try {
             DB::beginTransaction();
+            $temp__ = "";
             foreach ($temp->request as $index => $var) {
                 $t = explode('_', $index);
+                if($index == "bahasa_penelitian"){
+                    $temp__ = implode(", ", $var);
+                    if(!is_null($temp->bahasa_penelitian_etc)){
+                        $temp__ .= ", " . $temp->bahasa_penelitian_etc;
+                    }
+                    Answer::create([
+                        'id_question' => Question::where('slug', $index)->first()->id,
+                        'id_mahasiswa' => $mahasiswa->id,
+                        'answer' => $temp__
+                    ]);
+                    continue;
+                }
                 if($t[count($t)-1] == "etc"){
                     // TODO : etc
                     continue;
